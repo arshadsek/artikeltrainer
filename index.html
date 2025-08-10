@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikeltrainer</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; margin: 20px; position: relative; }
+  button { padding: 10px 20px; margin: 5px; font-size: 1.2rem; border-radius: 8px; cursor: pointer; }
+  .correct { background-color: #4CAF50; color: white; }
+  .wrong { background-color: #f44336; color: white; }
+  #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+           background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+  #modal-content { background: white; padding: 20px; border-radius: 10px; max-width: 400px; }
+  #wrongListBtn { position: absolute; left: 10px; top: 10px; }
+  #backBtn { position: absolute; left: 10px; top: 60px; display: none; }
+</style>
+</head>
+<body>
+
+<!-- Links die neuen Buttons -->
+<button id="wrongListBtn" onclick="switchToWrongMode()">Falsche Wörter</button>
+<button id="backBtn" onclick="switchToNormalMode()">Zurück</button>
+
+<h1 id="title">Artikeltrainer</h1>
+
+<div id="quiz">
+  <h2 id="word">Lade Wörter...</h2>
+
+  <!-- Artikel-Buttons -->
+  <div id="articleButtons">
+    <button onclick="checkAnswer('der')">der</button>
+    <button onclick="checkAnswer('die')">die</button>
+    <button onclick="checkAnswer('das')">das</button>
+  </div>
+
+  <p id="feedback"></p>
+  
+  <!-- Info-Button -->
+  <button id="infoBtn" style="display:none;" onclick="openModal()">ℹ️ Info</button>
+  <br><br>
+  
+  <!-- Next-Button -->
+  <button id="nextBtn" style="display:none;" onclick="nextWord()">Next</button>
+</div>
+
+<!-- Modal -->
+<div id="modal">
+  <div id="modal-content">
+    <p id="description"></p>
+    <button onclick="closeModal()">Schließen</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+let words = [];
+let wrongWords = []; // {wort, artikel, beschreibung, correctCount}
+let currentWord = null;
+let answered = false;
+let isWrongMode = false;
+
+async function loadCSV() {
+  try {
+    const response = await fetch('worter.csv');
+    const csvText = await response.text();
+    const parsed = Papa.parse(csvText, { header: true });
+    words = parsed.data.filter(row => row.wort && row.artikel && row.beschreibung);
+    nextWord();
+  } catch (err) {
+    document.getElementById('word').textContent = 'Fehler beim Laden der CSV-Datei!';
+    console.error(err);
+  }
+}
+
+function getRandomWord() {
+  let list = isWrongMode ? wrongWords : words;
+  if (list.length === 0) {
+    document.getElementById('word').textContent = isWrongMode
+      ? "Keine falschen Wörter mehr!"
+      : "Keine Wörter gefunden!";
+    return null;
+  }
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function showWord(wordObj) {
+  if (!wordObj) return;
+  currentWord = wordObj;
+  answered = false;
+
+  document.getElementById('word').textContent = wordObj.wort;
+
+  // Artikel-Buttons zurücksetzen
+  document.querySelectorAll('#articleButtons button').forEach(b => {
+    b.classList.remove('correct', 'wrong');
+    b.disabled = false;
+  });
+
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('infoBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function checkAnswer(answer) {
+  if (answered) return;
+  answered = true;
+
+  const correct = currentWord.artikel.trim().toLowerCase();
+  const articleButtons = document.querySelectorAll('#articleButtons button');
+
+  articleButtons.forEach(b => {
+    if (b.textContent === correct) b.classList.add('correct');
+    if (b.textContent === answer && answer !== correct) b.classList.add('wrong');
+    b.disabled = true;
+  });
+
+  document.getElementById('feedback').textContent =
+    `${currentWord.artikel} ${currentWord.wort}`;
+  document.getElementById('nextBtn').style.display = 'inline-block';
+
+  if (!isWrongMode && answer !== correct) {
+    // ins falsche Liste aufnehmen oder Zähler zurücksetzen
+    let found = wrongWords.find(w => w.wort === currentWord.wort);
+    if (!found) {
+      wrongWords.push({ ...currentWord, correctCount: 0 });
+    } else {
+      found.correctCount = 0; // wieder von vorne üben
+    }
+  }
+
+  if (isWrongMode) {
+    if (answer === correct) {
+      // Zähler erhöhen
+      let found = wrongWords.find(w => w.wort === currentWord.wort);
+      if (found) {
+        found.correctCount++;
+        if (found.correctCount >= 3) {
+          // aus Liste entfernen
+          wrongWords = wrongWords.filter(w => w.wort !== found.wort);
+        }
+      }
+    } else {
+      // falsche Antwort -> Zähler zurücksetzen
+      let found = wrongWords.find(w => w.wort === currentWord.wort);
+      if (found) {
+        found.correctCount = 0;
+      }
+    }
+  }
+}
+
+function nextWord() {
+  showWord(getRandomWord());
+}
+
+function openModal() {
+  document.getElementById('description').textContent = currentWord.beschreibung;
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+function switchToWrongMode() {
+  if (wrongWords.length === 0) {
+    alert("Keine falschen Wörter zum Üben!");
+    return;
+  }
+  isWrongMode = true;
+  document.getElementById('title').textContent = "Falsche Wörter üben";
+  document.getElementById('wrongListBtn').style.display = 'none';
+  document.getElementById('backBtn').style.display = 'inline-block';
+  nextWord();
+}
+
+function switchToNormalMode() {
+  isWrongMode = false;
+  document.getElementById('title').textContent = "Artikeltrainer";
+  document.getElementById('wrongListBtn').style.display = 'inline-block';
+  document.getElementById('backBtn').style.display = 'none';
+  nextWord();
+}
+
+loadCSV();
+</script>
+
+</body>
+</html>
