@@ -14,7 +14,7 @@
       button {
         padding: 10px 20px;
         margin: 5px;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         border-radius: 8px;
         cursor: pointer;
       }
@@ -43,25 +43,33 @@
         border-radius: 10px;
         max-width: 400px;
       }
-      #wrongListBtn {
+      /* Rechte Seitenbuttons */
+      #rightButtons {
         position: absolute;
-        left: 10px;
+        right: 10px;
         top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
-      #backBtn {
-        position: absolute;
-        left: 10px;
-        top: 60px;
-        display: none;
+      #rightButtons button {
+        width: 180px;
       }
     </style>
   </head>
   <body>
-    <!-- Links die neuen Buttons -->
-    <button id="wrongListBtn" onclick="switchToWrongMode()">
-      Falsche Wörter
-    </button>
-    <button id="backBtn" onclick="switchToNormalMode()">Zurück</button>
+    <!-- Rechte Seite: Modus-Buttons -->
+    <div id="rightButtons">
+      <button id="notPracticedBtn" onclick="switchToNotPracticedMode()">
+        Nicht geübte Wörter
+      </button>
+      <button id="wrongListBtn" onclick="switchToWrongMode()">
+        Falsche Wörter
+      </button>
+      <button id="backBtn" onclick="switchToNormalMode()" style="display: none">
+        Zurück
+      </button>
+    </div>
 
     <h1 id="title">Artikeltrainer</h1>
 
@@ -101,9 +109,10 @@
     <script>
       let words = [];
       let wrongWords = []; // {wort, artikel, beschreibung, correctCount}
+      let notPracticedWords = [];
       let currentWord = null;
       let answered = false;
-      let isWrongMode = false;
+      let mode = "normal"; // "normal", "wrong", "notPracticed"
 
       async function loadCSV() {
         try {
@@ -113,6 +122,7 @@
           words = parsed.data.filter(
             (row) => row.wort && row.artikel && row.beschreibung
           );
+          notPracticedWords = [...words];
           nextWord();
         } catch (err) {
           document.getElementById("word").textContent =
@@ -122,11 +132,20 @@
       }
 
       function getRandomWord() {
-        let list = isWrongMode ? wrongWords : words;
+        let list =
+          mode === "wrong"
+            ? wrongWords
+            : mode === "notPracticed"
+            ? notPracticedWords
+            : words;
+
         if (list.length === 0) {
-          document.getElementById("word").textContent = isWrongMode
-            ? "Keine falschen Wörter mehr!"
-            : "Keine Wörter gefunden!";
+          document.getElementById("word").textContent =
+            mode === "wrong"
+              ? "Keine falschen Wörter mehr!"
+              : mode === "notPracticed"
+              ? "Keine ungeübten Wörter mehr!"
+              : "Keine Wörter gefunden!";
           return null;
         }
         return list[Math.floor(Math.random() * list.length)];
@@ -139,7 +158,6 @@
 
         document.getElementById("word").textContent = wordObj.wort;
 
-        // Artikel-Buttons zurücksetzen
         document.querySelectorAll("#articleButtons button").forEach((b) => {
           b.classList.remove("correct", "wrong");
           b.disabled = false;
@@ -171,33 +189,33 @@
         ).textContent = `${currentWord.artikel} ${currentWord.wort}`;
         document.getElementById("nextBtn").style.display = "inline-block";
 
-        if (!isWrongMode && answer !== correct) {
-          // ins falsche Liste aufnehmen oder Zähler zurücksetzen
+        // Aus "Nicht geübte" Liste entfernen
+        notPracticedWords = notPracticedWords.filter(
+          (w) => w.wort !== currentWord.wort
+        );
+
+        // Falsche Antwort -> in falsche Liste aufnehmen
+        if (mode !== "wrong" && answer !== correct) {
           let found = wrongWords.find((w) => w.wort === currentWord.wort);
           if (!found) {
             wrongWords.push({ ...currentWord, correctCount: 0 });
           } else {
-            found.correctCount = 0; // wieder von vorne üben
+            found.correctCount = 0;
           }
         }
 
-        if (isWrongMode) {
+        // Verhalten im falsche Wörter Modus
+        if (mode === "wrong") {
+          let found = wrongWords.find((w) => w.wort === currentWord.wort);
           if (answer === correct) {
-            // Zähler erhöhen
-            let found = wrongWords.find((w) => w.wort === currentWord.wort);
             if (found) {
               found.correctCount++;
               if (found.correctCount >= 3) {
-                // aus Liste entfernen
                 wrongWords = wrongWords.filter((w) => w.wort !== found.wort);
               }
             }
           } else {
-            // falsche Antwort -> Zähler zurücksetzen
-            let found = wrongWords.find((w) => w.wort === currentWord.wort);
-            if (found) {
-              found.correctCount = 0;
-            }
+            if (found) found.correctCount = 0;
           }
         }
       }
@@ -221,19 +239,42 @@
           alert("Keine falschen Wörter zum Üben!");
           return;
         }
-        isWrongMode = true;
+        mode = "wrong";
         document.getElementById("title").textContent = "Falsche Wörter üben";
-        document.getElementById("wrongListBtn").style.display = "none";
-        document.getElementById("backBtn").style.display = "inline-block";
+        toggleModeButtons();
+        nextWord();
+      }
+
+      function switchToNotPracticedMode() {
+        if (notPracticedWords.length === 0) {
+          alert("Keine ungeübten Wörter mehr!");
+          return;
+        }
+        mode = "notPracticed";
+        document.getElementById("title").textContent =
+          "Nicht geübte Wörter üben";
+        toggleModeButtons();
         nextWord();
       }
 
       function switchToNormalMode() {
-        isWrongMode = false;
+        mode = "normal";
         document.getElementById("title").textContent = "Artikeltrainer";
-        document.getElementById("wrongListBtn").style.display = "inline-block";
-        document.getElementById("backBtn").style.display = "none";
+        toggleModeButtons();
         nextWord();
+      }
+
+      function toggleModeButtons() {
+        const isBack = mode !== "normal";
+        document.getElementById("wrongListBtn").style.display = isBack
+          ? "none"
+          : "inline-block";
+        document.getElementById("notPracticedBtn").style.display = isBack
+          ? "none"
+          : "inline-block";
+        document.getElementById("backBtn").style.display = isBack
+          ? "inline-block"
+          : "none";
       }
 
       loadCSV();
