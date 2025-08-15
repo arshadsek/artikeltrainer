@@ -55,6 +55,10 @@
       #rightButtons button {
         width: 180px;
       }
+      #counter {
+        font-weight: bold;
+        margin-top: 5px;
+      }
     </style>
   </head>
   <body>
@@ -65,6 +69,13 @@
       </button>
       <button id="wrongListBtn" onclick="switchToWrongMode()">
         Falsche Wörter
+      </button>
+      <button id="allWordsBtn" onclick="switchToAllWordsMode()">
+        Alle Wörter üben
+      </button>
+      <span id="counter" style="display: none">0/0</span>
+      <button id="resetAllBtn" onclick="resetAllWords()" style="display: none">
+        Fortschritt zurücksetzen
       </button>
       <button id="backBtn" onclick="switchToNormalMode()" style="display: none">
         Zurück
@@ -108,11 +119,15 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
       let words = [];
-      let wrongWords = []; // {wort, artikel, beschreibung, correctCount}
+      let wrongWords = [];
       let notPracticedWords = [];
+      let allWordsList = [];
+      let allWordsProgress = 0;
+      let allWordsTotal = 0;
+
       let currentWord = null;
       let answered = false;
-      let mode = "normal"; // "normal", "wrong", "notPracticed"
+      let mode = "normal"; // "normal", "wrong", "notPracticed", "allWords"
 
       async function loadCSV() {
         try {
@@ -137,6 +152,8 @@
             ? wrongWords
             : mode === "notPracticed"
             ? notPracticedWords
+            : mode === "allWords"
+            ? allWordsList
             : words;
 
         if (list.length === 0) {
@@ -145,6 +162,8 @@
               ? "Keine falschen Wörter mehr!"
               : mode === "notPracticed"
               ? "Keine ungeübten Wörter mehr!"
+              : mode === "allWords"
+              ? "Alle Wörter gelernt!"
               : "Keine Wörter gefunden!";
           return null;
         }
@@ -194,7 +213,7 @@
           (w) => w.wort !== currentWord.wort
         );
 
-        // Falsche Antwort -> in falsche Liste aufnehmen
+        // Modus: falsche Wörter
         if (mode !== "wrong" && answer !== correct) {
           let found = wrongWords.find((w) => w.wort === currentWord.wort);
           if (!found) {
@@ -204,7 +223,6 @@
           }
         }
 
-        // Verhalten im falsche Wörter Modus
         if (mode === "wrong") {
           let found = wrongWords.find((w) => w.wort === currentWord.wort);
           if (answer === correct) {
@@ -217,6 +235,28 @@
           } else {
             if (found) found.correctCount = 0;
           }
+        }
+
+        // Modus: alle Wörter üben
+        if (mode === "allWords") {
+          if (answer === correct) {
+            allWordsList = allWordsList.filter(
+              (w) => w.wort !== currentWord.wort
+            );
+            allWordsProgress++;
+          } else {
+            // bei Fehler alles zurücksetzen
+            resetAllWords();
+          }
+          updateCounter();
+        }
+      }
+
+      function updateCounter() {
+        if (mode === "allWords") {
+          document.getElementById(
+            "counter"
+          ).textContent = `${allWordsProgress}/${allWordsTotal}`;
         }
       }
 
@@ -257,21 +297,42 @@
         nextWord();
       }
 
+      function switchToAllWordsMode() {
+        allWordsList = [...words];
+        allWordsProgress = 0;
+        allWordsTotal = words.length;
+        mode = "allWords";
+        document.getElementById("title").textContent = "Alle Wörter üben";
+        toggleModeButtons();
+        document.getElementById("counter").style.display = "inline-block";
+        document.getElementById("resetAllBtn").style.display = "inline-block";
+        updateCounter();
+        nextWord();
+      }
+
+      function resetAllWords() {
+        allWordsList = [...words];
+        allWordsProgress = 0;
+        updateCounter();
+      }
+
       function switchToNormalMode() {
         mode = "normal";
         document.getElementById("title").textContent = "Artikeltrainer";
         toggleModeButtons();
+        document.getElementById("counter").style.display = "none";
+        document.getElementById("resetAllBtn").style.display = "none";
         nextWord();
       }
 
       function toggleModeButtons() {
         const isBack = mode !== "normal";
-        document.getElementById("wrongListBtn").style.display = isBack
-          ? "none"
-          : "inline-block";
-        document.getElementById("notPracticedBtn").style.display = isBack
-          ? "none"
-          : "inline-block";
+        document.getElementById("wrongListBtn").style.display =
+          isBack && mode !== "wrong" ? "none" : "inline-block";
+        document.getElementById("notPracticedBtn").style.display =
+          isBack && mode !== "notPracticed" ? "none" : "inline-block";
+        document.getElementById("allWordsBtn").style.display =
+          isBack && mode !== "allWords" ? "none" : "inline-block";
         document.getElementById("backBtn").style.display = isBack
           ? "inline-block"
           : "none";
