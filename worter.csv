@@ -1,112 +1,101 @@
 wort,artikel,beschreibung
-Computer,der,Elektronisches Gerät zum Verarbeiten von Daten
-Laptop,der,Tragbarer Computer
-Tablet,das,Flaches, tragbares Computergerät
-Smartphone,das,Mobiles Telefon mit vielen Funktionen
-Bildschirm,der,Anzeigegerät für Bilder und Texte
-Tastatur,die,Gerät zum Eingeben von Daten
-Maus,die,Eingabegerät zum Steuern des Cursors
-Drucker,der,Gerät zum Ausdrucken von Dokumenten
-Scanner,der,Gerät zum Digitalisieren von Bildern und Texten
-Router,der,Gerät zur Internetverbindung
-Modem,das,Gerät zur Datenübertragung im Internet
-Kabel,das,Leitung zur Daten- oder Stromübertragung
-USB-Stick,der,Kleines tragbares Speichermedium
-Speicher,der,Ort zur Datenspeicherung
-Festplatte,die,Hardware zur dauerhaften Datenspeicherung
-Cloud,die,Online-Speicherplatz im Internet
-Software,die,Programme und Anwendungen auf Computern
-Hardware,die,Physische Bestandteile eines Computers
-App,die,Anwendungsprogramm für Smartphones oder Tablets
-System,das,Softwareumgebung eines Computers
-Browser,der,Programm zum Surfen im Internet
-Server,der,Computer der Dienste bereitstellt
-Datenbank,die,Strukturierte Sammlung von Daten
-Datei,die,Digitale Informationssammlung
-Ordner,der,Verzeichnis zum Organisieren von Dateien
-Backup,das,Sicherungskopie von Daten
-Firewall,die,Schutzsoftware für Computer
-Virenscanner,der,Programm zum Erkennen von Schadsoftware
-Malware,die,Schädliche Software
-Antivirus,der,Programm zur Schadsoftwarebekämpfung
-Update,das,Aktualisierung einer Software
-Installationsprogramm,das,Software zum Einrichten von Programmen
-Benutzerkonto,das,Individueller Zugang zu einem System
-Passwort,das,Geheime Zeichenfolge zum Zugang
-Login,der,Vorgang zum Einloggen in ein System
-Logout,der,Vorgang zum Ausloggen aus einem System
-Cloudspeicher,der,Speicherplatz im Internet
-Daten,die,Informationen in digitaler Form
-Digitalisierung,die,Umwandlung in digitale Formate
-Künstliche Intelligenz,die,Technologie zur maschinellen Intelligenz
-Algorithmus,der,Schrittfolge zur Problemlösung
-Programmierer,der,Person die Software schreibt
-Programmiersprache,die,Sprache zum Schreiben von Programmen
-Code,der,Anweisungen in Programmiersprachen
-Debugging,das,Fehlerbehebung im Programmcode
-Interface,das,Schnittstelle zur Interaktion
-App-Store,der,Plattform zum Herunterladen von Apps
-Bluetooth,das,Technologie zur kabellosen Datenübertragung
-WLAN,das,Drahtloses Netzwerk
-Netzwerk,das,Verbindung von Computern
-Kryptographie,die,Technik der sicheren Datenübertragung
-Passwortschutz,der,Sicherheitsschutz mit Passwort
-Cloud-Computing,das,Rechnen und Speichern im Internet
-Streaming,das,Übertragung von Medieninhalten
-Download,der,Herunterladen von Daten
-Upload,der,Hochladen von Daten
-Serverraum,der,Räumlichkeit mit Computern
-Rechner,der,Computer
-Desktop,der,Stationärer Computer
-Laptop-Tasche,die,Tasche für tragbare Computer
-Kopfhörer,der,Gerät zum Hören von Ton
-Mikrofon,das,Gerät zur Tonaufnahme
-Kamera,die,Gerät zum Fotografieren und Filmen
-Webseite,die,Internetpräsenz
-Homepage,die,Startseite einer Webseite
-Domain,die,Adresse einer Webseite
-URL,die,Webadresse
-IP-Adresse,die,Nummer zur Identifikation im Internet
-Browserfenster,das,Ansichtsfeld im Browser
-Tab,der,Einzelner Reiter im Browser
-Cookie,der,Datenstück zum Speichern von Nutzerinformationen
-Cache,der,Schnellspeicher im Computer
-Login-Daten,die,Informationen zum Einloggen
-Benutzeroberfläche,die,Visuelle Darstellung eines Programms
-Touchscreen,der,Bildschirm mit Berührungsempfindlichkeit
-Grafikkarte,die,Hardware zur Bilddarstellung
-Prozessor,der,Recheneinheit im Computer
-Arbeitsspeicher,der,Temporärer Speicher im Computer
-Mainboard,das,Hauptplatine eines Computers
-Netzteil,das,Versorgt den Computer mit Strom
-Lautsprecher,der,Gerät zur Tonwiedergabe
-USB-Anschluss,der,Verbindungspunkt für USB-Geräte
-HDMI-Kabel,das,Kabel für Bild- und Tonübertragung
-Virtual Reality,die,Künstliche Wirklichkeit
-Augmented Reality,die,Erweiterte Realität
-Smartwatch,die,Intelligente Armbanduhr
-Drohne,die,Fernsteuerbares Fluggerät
-Roboter,der,Automatisierte Maschine
-3D-Drucker,der,Gerät zur Herstellung von Objekten
-Gadget,das,Kleines technisches Gerät
-Chip,der,Mikroprozessor
-Sensor,der,Gerät zur Messung von physikalischen Größen
-Software-Entwicklung,die,Herstellung von Programmen
-Technik,die,Wissenschaft und Anwendung von Maschinen
-Virtuelle Maschine,die,Simulierte Computerumgebung
-Datenverschlüsselung,die,Sicherung von Daten durch Codierung
-Bit,der,Kleinste Informationseinheit
-Byte,der,Datenblock aus 8 Bits
-Cloud-Service,der,Dienstleistungen aus der Cloud
-Internet, das,Weltweites Computernetzwerk
-Intranet, das,Internes Computernetzwerk
-VPN, das,Virtual Private Network für sichere Verbindungen
-Firewall, die,Schutzsystem gegen unerlaubten Zugriff
-Cybersecurity, die,Schutz von Computernetzwerken
-Phishing, das,Versuch der Datenbeschaffung durch Täuschung
-Spam, der,Ungewünschte E-Mail-Nachrichten
-Streaming-Dienst, der,Plattform zum Abspielen von Medien
-App-Entwicklung, die,Herstellung von Anwendungen
-User Interface, das,Benutzeroberfläche
-Voice Assistant, der,Sprachgesteuertes Assistenzsystem
-Smart Home, das,Technologie zur Heimautomatisierung
+Hemd,das,Oberbekleidung mit Kragen und Knopfleiste  
+T-Shirt,das,Kurzärmeliges Oberteil aus Baumwolle  
+Bluse,die,Leichtes Oberteil für Frauen  
+Hose,die,Bekleidungsstück für die Beine  
+Jeans,die,Hose aus Denimstoff  
+Rock,der,Bekleidungsstück für den Unterkörper ohne getrennte Beine  
+Kleid,das,Einteiliges Kleidungsstück für Frauen  
+Jacke,die,Oberbekleidung zum Schutz vor Kälte  
+Mantel,der,Lange warme Oberbekleidung  
+Pullover,der,Langärmeliges Oberteil aus Wolle oder Strick  
+Sweatshirt,das,Bequemes langärmeliges Oberteil aus Baumwolle  
+Anzug,der,Formelle Kleidung bestehend aus Jackett und Hose  
+Krawatte,die,Schmales Tuch um den Hals für formelle Kleidung  
+Fliege,die,Schleifenförmige Halsbekleidung für festliche Anlässe  
+Weste,die,Ärmelloses Kleidungsstück für den Oberkörper  
+Shorts,die,Kurze Hose für warmes Wetter  
+Leggings,die,Eng anliegende elastische Hose  
+Strumpfhose,die,Dünne enganliegende Beinkleidung  
+Socke,die,Bekleidung für den Fuß aus Stoff  
+Schuh,der,Fußbekleidung aus Leder oder Stoff  
+Stiefel,der,Schuh mit hohem Schaft  
+Sandale,die,Offener Schuh für warmes Wetter  
+Turnschuh,der,Bequemer Sportschuh  
+Mütze,die,Kopfbedeckung aus Stoff oder Wolle  
+Hut,der,Kopfbedeckung mit Krempe  
+Basecap,die,Kappe mit gebogenem Schirm  
+Handschuh,der,Bekleidung für die Hände  
+Schal,der,Langes Tuch zum Wärmen des Halses  
+Tuch,das,Leichtes Stoffstück für Hals oder Kopf  
+Gürtel,der,Riemen zum Befestigen der Hose  
+BH,der,Büstenhalter für Frauen  
+Unterhose,die,Bekleidung für den unteren Körperbereich  
+Slip,der,Eng anliegende Unterhose  
+Boxershorts,die,Weite Unterhose für Männer  
+Pyjama,der,Bekleidung zum Schlafen  
+Nachthemd,das,Langes Schlafkleid für Frauen  
+Bademantel,der,Langer Mantel zum Überziehen nach dem Baden  
+Bikini,der,Zweiteiliger Badeanzug für Frauen  
+Badeanzug,der,Einteilige Badebekleidung für Frauen  
+Regenmantel,der,Wasserabweisende Oberbekleidung  
+Parka,der,Lange wetterfeste Jacke mit Kapuze  
+Blazer,der,Formelle Jacke für Damen oder Herren  
+Cardigan,der,Strickjacke mit Knöpfen oder Reißverschluss  
+Wollmantel,der,Mantel aus Wolle  
+Anorak,der,Wetterfeste Jacke mit Kapuze  
+Frack,der,Festlicher Herrenanzug mit langem Rückenteil  
+Smoking,der,Eleganter Herrenanzug für besondere Anlässe  
+Overall,der,Einteiliges Kleidungsstück für Arbeit oder Freizeit  
+Latzhose,die,Hose mit Brustlatz und Trägern  
+Poncho,der,Weit geschnittenes Oberteil ohne Ärmel  
+Capes,das,Ärmelloser Umhang  
+Weste,die,Ärmelloses Oberteil für Anzug oder Freizeit  
+Blouson,der,Kurze sportliche Jacke  
+Polohemd,das,Oberteil mit Kragen und Knopfleiste  
+Trainingsanzug,der,Zweiteiliges Sportoutfit  
+Jogginghose,die,Bequeme Sport- oder Freizeit­hose  
+Chino,die,Leichte Baumwollhose  
+Cargohose,die,Hose mit großen Taschen  
+Strickjacke,die,Jacke aus Strickstoff  
+Daunenjacke,die,Jacke mit Daunenfüllung für Wärme  
+Pelzmantel,der,Mantel aus echtem oder künstlichem Fell  
+Haarband,das,Schmuck- oder Sportband für den Kopf  
+Stirnband,das,Band um die Stirn zum Warmhalten oder als Accessoire  
+Armbanduhr,die,Schmuckstück zur Zeitmessung am Handgelenk  
+Ring,der,Runder Schmuck für den Finger  
+Halskette,die,Schmuckstück für den Hals  
+Ohrring,der,Schmuckstück für das Ohr  
+Armband,das,Schmuckstück für das Handgelenk  
+Handtasche,die,Tasche zum Tragen persönlicher Gegenstände  
+Rucksack,der,Tasche mit zwei Trägern für den Rücken  
+Geldbörse,die,Kleine Tasche für Geld und Karten  
+Koffer,der,Behälter zum Transport von Kleidung auf Reisen  
+Shopper,der,Große Einkaufstasche  
+Clutch,die,Kleine elegante Handtasche  
+Umhängetasche,die,Tasche mit langem Gurt  
+Aktentasche,die,Tasche für Dokumente und Laptop  
+Sonnenbrille,die,Brille zum Schutz vor Sonnenlicht  
+Brille,die,Sehhilfe mit Gläsern  
+Gürtelbeutel,der,Kleine Tasche zum Tragen am Gürtel  
+Hosenträger,der,Riemen zum Halten der Hose  
+Knopf,der,Kleiner Verschluss an Kleidung  
+Reißverschluss,der,Verschlussmechanismus mit Zähnen  
+Sicherheitsnadel,die,Kleine Nadel zum Befestigen von Stoff  
+Nadel,die,Dünnes Werkzeug zum Nähen  
+Faden,der,Dünnes Garn zum Nähen  
+Stoff,der,Gewebe zur Herstellung von Kleidung  
+Leder,das,Haltbares Material aus Tierhaut  
+Seide,die,Feines glattes Gewebe aus Kokonfäden  
+Baumwolle,die,Naturfaser aus den Samenhaaren der Baumwollpflanze  
+Leinen,das,Leichtes Gewebe aus Flachsfasern  
+Wolle,die,Naturfaser vom Fell von Schafen  
+Kunstfaser,die,Synthetisch hergestellte Textilfaser  
+Muster,das,Gestaltung von Stoffoberflächen  
+Farbe,die,Visueller Eindruck eines Stoffes  
+Größe,die,Maßangabe für Kleidung  
+Etikett,das,Kennzeichnung von Kleidung mit Informationen  
+Kollektion,die,Auswahl an Kleidungsstücken eines Designers  
+Mode,die,Aktuelle Stilrichtung in der Bekleidung  
+Designer,der,Person, die Kleidung entwirft  
+Schneider,der,Handwerker, der Kleidung anfertigt oder ändert
