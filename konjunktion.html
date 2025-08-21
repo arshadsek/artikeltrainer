@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Konjunktionstrainer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+        position: relative;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .correct {
+        background-color: #4caf50;
+        color: white;
+      }
+      .wrong {
+        background-color: #f44336;
+        color: white;
+      }
+      #modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+      #modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px;
+      }
+      #rightButtons {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      #rightButtons button {
+        width: 180px;
+      }
+      #counter {
+        font-weight: bold;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rightButtons">
+      <button id="notPracticedBtn" onclick="switchToNotPracticedMode()">
+        Nicht geübte Wörter
+      </button>
+      <button id="wrongListBtn" onclick="switchToWrongMode()">
+        Falsche Wörter
+      </button>
+      <button id="allWordsBtn" onclick="switchToAllWordsMode()">
+        Alle Wörter üben
+      </button>
+      <span id="counter" style="display: none">0/0</span>
+      <button id="resetAllBtn" onclick="resetAllWords()" style="display: none">
+        Fortschritt zurücksetzen
+      </button>
+      <button id="backBtn" onclick="switchToNormalMode()" style="display: none">
+        Zurück
+      </button>
+    </div>
+
+    <h1 id="title">Konjunktionstrainer</h1>
+
+    <div id="quiz">
+      <h2 id="word">Lade Wörter...</h2>
+
+      <!-- Kategorie-Buttons -->
+      <div id="articleButtons">
+        <button onclick="checkAnswer('Konjunktion')">Konjunktion</button>
+        <button onclick="checkAnswer('Subjunktion')">Subjunktion</button>
+        <button onclick="checkAnswer('Konjunktionaladverb')">
+          Konjunktionaladverb
+        </button>
+      </div>
+
+      <p id="feedback"></p>
+
+      <button id="infoBtn" style="display: none" onclick="openModal()">
+        ℹ️ Info
+      </button>
+      <br /><br />
+
+      <button id="nextBtn" style="display: none" onclick="nextWord()">
+        Next
+      </button>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal">
+      <div id="modal-content">
+        <p id="description"></p>
+        <button onclick="closeModal()">Schließen</button>
+      </div>
+    </div>
+
+    <script>
+      // Wortliste
+      let words = [
+        {
+          wort: "aber",
+          artikel: "Konjunktion",
+          beschreibung: "entgegenstellend",
+        },
+        { wort: "denn", artikel: "Konjunktion", beschreibung: "begründend" },
+        {
+          wort: "doch",
+          artikel: "Konjunktion",
+          beschreibung: "entgegenstellend",
+        },
+        { wort: "oder", artikel: "Konjunktion", beschreibung: "alternative" },
+        {
+          wort: "sondern",
+          artikel: "Konjunktion",
+          beschreibung: "Gegensatz nach Negation",
+        },
+        { wort: "und", artikel: "Konjunktion", beschreibung: "verbindend" },
+
+        {
+          wort: "als",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, einmalig in Vergangenheit",
+        },
+        {
+          wort: "bevor",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, davor",
+        },
+        {
+          wort: "bis",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, Endpunkt",
+        },
+        { wort: "da", artikel: "Subjunktion", beschreibung: "begründend" },
+        {
+          wort: "damit",
+          artikel: "Subjunktion",
+          beschreibung: "Finalsatz, Zweck",
+        },
+        {
+          wort: "dass",
+          artikel: "Subjunktion",
+          beschreibung: "Nebensatz einleitend",
+        },
+        {
+          wort: "ehe",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, bevor",
+        },
+        { wort: "falls", artikel: "Subjunktion", beschreibung: "Bedingung" },
+        {
+          wort: "indem",
+          artikel: "Subjunktion",
+          beschreibung: "Art und Weise",
+        },
+        {
+          wort: "nachdem",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, danach",
+        },
+        { wort: "ob", artikel: "Subjunktion", beschreibung: "indirekte Frage" },
+        {
+          wort: "obgleich/obschon/obwohl",
+          artikel: "Subjunktion",
+          beschreibung: "Gegensatz",
+        },
+        {
+          wort: "seit",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, Beginn",
+        },
+        {
+          wort: "seitdem",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, Beginn",
+        },
+        {
+          wort: "sobald",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, sofort wenn",
+        },
+        { wort: "sodass", artikel: "Subjunktion", beschreibung: "Folge" },
+        { wort: "sofern", artikel: "Subjunktion", beschreibung: "Bedingung" },
+        {
+          wort: "solange",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, Dauer",
+        },
+        {
+          wort: "sooft",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich, Wiederholung",
+        },
+        {
+          wort: "soweit",
+          artikel: "Subjunktion",
+          beschreibung: "Bedingung/Einschränkung",
+        },
+        {
+          wort: "soviel",
+          artikel: "Subjunktion",
+          beschreibung: "Einschränkung",
+        },
+        {
+          wort: "während",
+          artikel: "Subjunktion",
+          beschreibung: "zeitlich/konzessiv",
+        },
+        { wort: "weil", artikel: "Subjunktion", beschreibung: "Begründung" },
+        {
+          wort: "wenn",
+          artikel: "Subjunktion",
+          beschreibung: "Bedingung/zeitlich",
+        },
+        { wort: "wie", artikel: "Subjunktion", beschreibung: "Vergleich" },
+        {
+          wort: "wohingegen",
+          artikel: "Subjunktion",
+          beschreibung: "Gegensatz",
+        },
+
+        {
+          wort: "allerdings",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Einschränkung",
+        },
+        {
+          wort: "also",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Folgerung",
+        },
+        {
+          wort: "andererseits",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Gegensatz",
+        },
+        {
+          wort: "anschließend",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, danach",
+        },
+        {
+          wort: "außerdem",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "hinzufügend",
+        },
+        {
+          wort: "beziehungsweise",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "genauer gesagt",
+        },
+        {
+          wort: "dabei",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "gleichzeitig / trotzdem",
+        },
+        {
+          wort: "dadurch",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Folge",
+        },
+        {
+          wort: "dafür",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Gegensatz / Zweck",
+        },
+        {
+          wort: "dagegen",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Gegensatz",
+        },
+        {
+          wort: "danach",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, danach",
+        },
+        {
+          wort: "dann",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, anschließend",
+        },
+        {
+          wort: "darauf",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, danach",
+        },
+        {
+          wort: "darum",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Begründung",
+        },
+        {
+          wort: "davor",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, davor",
+        },
+        {
+          wort: "dazu",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "hinzufügend",
+        },
+        {
+          wort: "dennoch",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "trotzdem",
+        },
+        {
+          wort: "deshalb",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Folge",
+        },
+        {
+          wort: "deswegen",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Folge",
+        },
+        {
+          wort: "einerseits",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Teil einer Zweiteilung",
+        },
+        {
+          wort: "entweder",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Alternative",
+        },
+        {
+          wort: "ferner",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "außerdem",
+        },
+        {
+          wort: "folglich",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Schlussfolgerung",
+        },
+        {
+          wort: "genauso",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Vergleich",
+        },
+        {
+          wort: "immerhin",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Einschränkung",
+        },
+        {
+          wort: "inzwischen",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, mittlerweile",
+        },
+        {
+          wort: "jedoch",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Gegensatz",
+        },
+        {
+          wort: "schließlich",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "abschließend",
+        },
+        {
+          wort: "somit",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Schlussfolgerung",
+        },
+        {
+          wort: "sonst",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Bedingung",
+        },
+        {
+          wort: "später",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, danach",
+        },
+        {
+          wort: "trotzdem",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "entgegenstellend",
+        },
+        {
+          wort: "vorher",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, davor",
+        },
+        {
+          wort: "weder … noch",
+          artikel: "Konjunktion",
+          beschreibung: "doppelte Verneinung",
+        },
+        {
+          wort: "zuerst",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, Anfang",
+        },
+        {
+          wort: "zuvor",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "zeitlich, davor",
+        },
+        {
+          wort: "zwar",
+          artikel: "Konjunktionaladverb",
+          beschreibung: "Einschränkung",
+        },
+      ];
+
+      let wrongWords = [];
+      let notPracticedWords = [...words];
+      let allWordsList = [];
+      let allWordsProgress = 0;
+      let allWordsTotal = 0;
+
+      let currentWord = null;
+      let answered = false;
+      let mode = "normal";
+
+      function getRandomWord() {
+        let list =
+          mode === "wrong"
+            ? wrongWords
+            : mode === "notPracticed"
+            ? notPracticedWords
+            : mode === "allWords"
+            ? allWordsList
+            : words;
+
+        if (list.length === 0) {
+          document.getElementById("word").textContent =
+            mode === "wrong"
+              ? "Keine falschen Wörter mehr!"
+              : mode === "notPracticed"
+              ? "Keine ungeübten Wörter mehr!"
+              : mode === "allWords"
+              ? "Alle Wörter gelernt!"
+              : "Keine Wörter gefunden!";
+          return null;
+        }
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function showWord(wordObj) {
+        if (!wordObj) return;
+        currentWord = wordObj;
+        answered = false;
+
+        document.getElementById("word").textContent = wordObj.wort;
+
+        document.querySelectorAll("#articleButtons button").forEach((b) => {
+          b.classList.remove("correct", "wrong");
+          b.disabled = false;
+        });
+
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("infoBtn").style.display = "inline-block";
+        document.getElementById("nextBtn").style.display = "none";
+      }
+
+      function checkAnswer(answer) {
+        if (answered) return;
+        answered = true;
+
+        const correct = currentWord.artikel.trim();
+        const articleButtons = document.querySelectorAll(
+          "#articleButtons button"
+        );
+
+        articleButtons.forEach((b) => {
+          if (b.textContent === correct) b.classList.add("correct");
+          if (b.textContent === answer && answer !== correct)
+            b.classList.add("wrong");
+          b.disabled = true;
+        });
+
+        document.getElementById(
+          "feedback"
+        ).textContent = `${currentWord.artikel}: ${currentWord.wort}`;
+        document.getElementById("nextBtn").style.display = "inline-block";
+
+        notPracticedWords = notPracticedWords.filter(
+          (w) => w.wort !== currentWord.wort
+        );
+
+        if (mode !== "wrong" && answer !== correct) {
+          let found = wrongWords.find((w) => w.wort === currentWord.wort);
+          if (!found) {
+            wrongWords.push({ ...currentWord, correctCount: 0 });
+          } else {
+            found.correctCount = 0;
+          }
+        }
+
+        if (mode === "wrong") {
+          let found = wrongWords.find((w) => w.wort === currentWord.wort);
+          if (answer === correct) {
+            if (found) {
+              found.correctCount++;
+              if (found.correctCount >= 3) {
+                wrongWords = wrongWords.filter((w) => w.wort !== found.wort);
+              }
+            }
+          } else {
+            if (found) found.correctCount = 0;
+          }
+        }
+
+        if (mode === "allWords") {
+          if (answer === correct) {
+            allWordsList = allWordsList.filter(
+              (w) => w.wort !== currentWord.wort
+            );
+            allWordsProgress++;
+          } else {
+            resetAllWords();
+          }
+          updateCounter();
+        }
+      }
+
+      function updateCounter() {
+        if (mode === "allWords") {
+          document.getElementById(
+            "counter"
+          ).textContent = `${allWordsProgress}/${allWordsTotal}`;
+        }
+      }
+
+      function nextWord() {
+        showWord(getRandomWord());
+      }
+
+      function openModal() {
+        document.getElementById("description").textContent =
+          currentWord.beschreibung;
+        document.getElementById("modal").style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      function switchToWrongMode() {
+        if (wrongWords.length === 0) {
+          alert("Keine falschen Wörter zum Üben!");
+          return;
+        }
+        mode = "wrong";
+        document.getElementById("title").textContent = "Falsche Wörter üben";
+        toggleModeButtons();
+        nextWord();
+      }
+
+      function switchToNotPracticedMode() {
+        if (notPracticedWords.length === 0) {
+          alert("Keine ungeübten Wörter mehr!");
+          return;
+        }
+        mode = "notPracticed";
+        document.getElementById("title").textContent =
+          "Nicht geübte Wörter üben";
+        toggleModeButtons();
+        nextWord();
+      }
+
+      function switchToAllWordsMode() {
+        allWordsList = [...words];
+        allWordsProgress = 0;
+        allWordsTotal = words.length;
+        mode = "allWords";
+        document.getElementById("title").textContent = "Alle Wörter üben";
+        toggleModeButtons();
+        document.getElementById("counter").style.display = "inline-block";
+        document.getElementById("resetAllBtn").style.display = "inline-block";
+        updateCounter();
+        nextWord();
+      }
+
+      function resetAllWords() {
+        allWordsList = [...words];
+        allWordsProgress = 0;
+        updateCounter();
+      }
+
+      function switchToNormalMode() {
+        mode = "normal";
+        document.getElementById("title").textContent = "Konjunktionstrainer";
+        toggleModeButtons();
+        document.getElementById("counter").style.display = "none";
+        document.getElementById("resetAllBtn").style.display = "none";
+        nextWord();
+      }
+
+      function toggleModeButtons() {
+        const isBack = mode !== "normal";
+        document.getElementById("wrongListBtn").style.display =
+          isBack && mode !== "wrong" ? "none" : "inline-block";
+        document.getElementById("notPracticedBtn").style.display =
+          isBack && mode !== "notPracticed" ? "none" : "inline-block";
+        document.getElementById("allWordsBtn").style.display =
+          isBack && mode !== "allWords" ? "none" : "inline-block";
+        document.getElementById("backBtn").style.display = isBack
+          ? "inline-block"
+          : "none";
+      }
+
+      // Start
+      nextWord();
+    </script>
+  </body>
+</html>
